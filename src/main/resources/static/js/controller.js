@@ -2,22 +2,38 @@
  * The controller file for front end
  */
 var app = angular.module('app', []);
-app.controller('postcontroller', function($scope, $http, $location) {
-	  $scope.submitForm = function(){
-	    var url = $location.absUrl() + "postMessage";
+app.controller('postListcontroller', function($scope, $http, $location) {
+	  $scope.submitListForm = function(){
+	    var url = $location.absUrl() + "postListMessageForUser";
+	    
 	    var config = {
 	                headers : {
 	                    'Accept': 'text/plain'
 	                }
 	        }
 	    var data = {
-	    		inputMessage: $scope.inputMessage
+	    		inputMessageList: $scope.messages,
+	    		firstName:$scope.firstname,
+	    		lastName:$scope.lastname
 	        };
+	    
 	    $http.post(url, data, config).then(function (response) {
 	      $scope.postResultMessage = response.data;
 	    }, function error(response) {
 	      $scope.postResultMessage = "Error with status: " +  response.statusText;
 	    });
-	    $scope.inputMessage = "";
+	    
+	    $scope.inputMessageList = [];
 	  }
- });
+	});
+app.controller('getcontroller', function($scope, $http, $location) {
+	  $scope.getfunction = function(){
+	    var url = $location.absUrl() + "getAllMessages";
+	    
+	    $http.get(url).then(function (response) {
+	      $scope.response = response.data
+	    }, function error(response) {
+	      $scope.postResultMessage = "Error with status: " +  response.statusText;
+	    });
+	  }
+	});
