@@ -1,4 +1,5 @@
-#SpringBootWebApplication 
+SpringBootWebApplication
+
 This is a web application that allows the users to share post(s), comment on the existing posts and view the entire list. The technical specification of the application are as given below:
 
 The specifications of the application
