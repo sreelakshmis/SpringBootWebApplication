@@ -1,0 +1,1 @@
+insert into post values(1001, 'TestMessage', '2019-06-01 13:50:21.007');

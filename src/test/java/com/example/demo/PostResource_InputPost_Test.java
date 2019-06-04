@@ -19,7 +19,7 @@ public class PostResource_InputPost_Test {
 
 	@Autowired
 	PostResource postResource;
-
+	
 	Post post;
 
 	@Test
