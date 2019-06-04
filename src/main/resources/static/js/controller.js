@@ -37,3 +37,27 @@ app.controller('getcontroller', function($scope, $http, $location) {
 	    });
 	  }
 	});
+app.controller('postCommentController', function($scope, $attrs, $http, $location) {
+	  $scope.postComment = function(){
+	    var postId = $attrs.post;
+	    var config = {
+	                headers : {
+	                    'Accept': 'text/plain'
+	                }
+	        }
+	    var data = {
+	    		commentString: $scope.comment,
+	    		postId: postId
+	        };
+
+	    var url = $location.absUrl() + "postComment";
+	     $http.post(url, data, config).then(function (response) {
+	     
+	      $scope.postResultMessage = response.data;
+	    }, function error(response) {
+	      $scope.postResultMessage = "Error with status: " +  response.statusText;
+	    });
+	    
+	    $scope.commentString = "";
+	  }
+	});

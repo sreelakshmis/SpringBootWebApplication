@@ -13,10 +13,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.data.CommentRepository;
 import com.example.demo.data.PostRepository;
 import com.example.demo.data.UserRepository;
+import com.example.demo.model.Comment;
 import com.example.demo.model.Post;
 import com.example.demo.model.User;
+import com.example.demo.wrapper.CommentWrapper;
 import com.example.demo.wrapper.PostWrapper;
 
 @RestController
@@ -27,6 +30,9 @@ public class PostResource {
 	
 	@Autowired
 	UserRepository UserRepository;
+	
+	@Autowired
+	CommentRepository commentRepository;
 
 	/**
 	 * This method will return the text passed as path variable
@@ -46,6 +52,10 @@ public class PostResource {
 		return post.getInputMessage();
 	}
   
+	/**
+	 * Method that will save the list of post messages for the corresponding user
+	 * @param postWrapper
+	 */
 	@PostMapping(path = "/postListMessageForUser")
 	public void createPostListForUser(@RequestBody PostWrapper postWrapper) {
 		if (postWrapper == null)
@@ -68,9 +78,25 @@ public class PostResource {
 		}
 	}
 	
+	/**
+	 * Method will get all the messages added
+	 * @return list of messages 
+	 */
 	@GetMapping(path = "/getAllMessages")
 	public List<Post> inputAllMessages() {
 		List<Post> post = postRepository.findAll();
 		return post;
+	}
+	
+	/**
+	 * Method to comment for a post
+	 * @param comment
+	 * @return the added string
+	 */
+	@PostMapping(path = "/postComment")
+	public String createComment(@RequestBody CommentWrapper comment) {
+		Comment newComment = commentRepository.save(new Comment(comment.getCommentString(), new Post(comment.getPostId())) );
+		return newComment.getCommentString();
+		
 	}
 }

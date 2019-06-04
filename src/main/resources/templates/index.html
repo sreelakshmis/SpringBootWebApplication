@@ -57,11 +57,19 @@
 	 	<div class="getmessage col-sm-10" ng-controller="getcontroller">
 		    <button id="btn-id" type="button" ng-click="getfunction()">Get all messages</button>
 		    <ul>
-	           <div *ngif="{{post.inputMessage}}">
-		         <li ng-repeat="post in response">{{post.inputMessage}}</li>
+	           <div>
+		         <li ng-repeat="post in response">{{post.inputMessage}}
+		         <div class="comment-calss" *ngif="{{post.inputMessage}}" ng-controller="postCommentController" data-post="{{post.id}}">
+					  <input type="text" name="comment" placeholder="enter to comment.." ng-model="comment"/>
+					  <button id="btn-comment" type="button" ng-click="postComment()">Comment</button><br/>
+					   <div>
+					      <span>{{postResultMessage}}</span>
+					   </div>
+				 </div>
+				 </li>
 	           </div>
 		    </ul>
-	  	</div>
+	  	</div> 
 	  </div> 
 	</body>
 </html>
