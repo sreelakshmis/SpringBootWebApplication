@@ -14,7 +14,8 @@ app.controller('postListcontroller', function($scope, $http, $location) {
 	    var data = {
 	    		inputMessageList: $scope.messages,
 	    		firstName:$scope.firstname,
-	    		lastName:$scope.lastname
+	    		lastName:$scope.lastname,
+	    		cityName:$scope.cityname
 	        };
 	    
 	    $http.post(url, data, config).then(function (response) {

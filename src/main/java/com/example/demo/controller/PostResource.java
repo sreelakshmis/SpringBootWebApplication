@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import static org.springframework.util.StringUtils.isEmpty;
 
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
@@ -21,6 +22,8 @@ import com.example.demo.model.Post;
 import com.example.demo.model.User;
 import com.example.demo.wrapper.CommentWrapper;
 import com.example.demo.wrapper.PostWrapper;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 
 @RestController
 public class PostResource {
@@ -33,6 +36,8 @@ public class PostResource {
 	
 	@Autowired
 	CommentRepository commentRepository;
+	
+	WeatherResource weatherResource = new WeatherResource();
 
 	/**
 	 * This method will return the text passed as path variable
@@ -55,17 +60,21 @@ public class PostResource {
 	/**
 	 * Method that will save the list of post messages for the corresponding user
 	 * @param postWrapper
+	 * @throws IOException 
+	 * @throws JsonMappingException 
+	 * @throws JsonParseException 
 	 */
 	@PostMapping(path = "/postListMessageForUser")
-	public void createPostListForUser(@RequestBody PostWrapper postWrapper) {
+	public void createPostListForUser(@RequestBody PostWrapper postWrapper) throws JsonParseException, JsonMappingException, IOException {
 		if (postWrapper == null)
 			return;
 
 		List<String> messsages = postWrapper.getInputMessageList();
 		String firstName = postWrapper.getFirstName();
 		String lastName = postWrapper.getLastName();
+		String cityName = postWrapper.getCityName();
         
-		if(isEmpty(firstName)||isEmpty(lastName) || CollectionUtils.isEmpty(messsages))
+		if(isEmpty(firstName)||isEmpty(lastName) || isEmpty(cityName) ||CollectionUtils.isEmpty(messsages))
 			return;
 		
 		// insert User and get the Id back
@@ -74,7 +83,9 @@ public class PostResource {
 		// insert post with the user id
 		Timestamp currentTime = new Timestamp(new Date().getTime());
 		for (String newPostMessage : messsages) {
-			postRepository.save(new Post(newPostMessage, currentTime, newUser));
+			Post newPost = new Post(newPostMessage, currentTime, newUser);
+			newPost.setLocationDetails(weatherResource.makeWeatherAPICall(cityName));
+			postRepository.save(newPost);
 		}
 	}
 	
@@ -99,4 +110,6 @@ public class PostResource {
 		return newComment.getCommentString();
 		
 	}
+	
+	
 }

@@ -7,6 +7,7 @@ public class PostWrapper {
 	private List<String> inputMessageList;
 	private String firstName;
 	private String LastName;
+	private String cityName;
 
 	public PostWrapper() {
 
@@ -42,5 +43,14 @@ public class PostWrapper {
 	public String getLastName() {
 		return LastName;
 	}
+	
+	public String getCityName() {
+		return cityName;
+	}
+
+	public void setCityName(String cityName) {
+		this.cityName = cityName;
+	}
+
 
 }

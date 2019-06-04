@@ -39,13 +39,18 @@
 					 <br/>
 		        </div>
 		        <div class="form-group">
-		        	<label>FirstName: <input type="text" class="form-control" name="firstname" id="firstnameID"
+		        	<label>FirstName: <input type="text" class="form-control" name="firstname" id="firstnameid"
 			            placeholder="Enter FirstName" ng-model="firstname"/> 
 			        </label>
 		        </div>
 		        <div class="form-group">
-		        	 <label>LastName: <input type="text" class="form-control" name="lastname" id="lastnameID"
+		        	 <label>LastName: <input type="text" class="form-control" name="lastname" id="lastnameid"
 			            placeholder="Enter LastName" ng-model="lastname"/>
+		        	 </label>
+		        </div>
+		        <div class="form-group">
+		        	 <label>City: <input type="text" class="form-control" name="cityname" id="Citynameid"
+			            placeholder="Enter city" ng-model="cityname"/>
 		        	 </label>
 		        </div>
 		        <br/>
@@ -58,7 +63,7 @@
 		    <button id="btn-id" type="button" ng-click="getfunction()">Get all messages</button>
 		    <ul>
 	           <div>
-		         <li ng-repeat="post in response">{{post.inputMessage}}
+		         <li ng-repeat="post in response">{{post.inputMessage}} {{post.locationDetails}}
 		         <div class="comment-calss" *ngif="{{post.inputMessage}}" ng-controller="postCommentController" data-post="{{post.id}}">
 					  <input type="text" name="comment" placeholder="enter to comment.." ng-model="comment"/>
 					  <button id="btn-comment" type="button" ng-click="postComment()">Comment</button><br/>

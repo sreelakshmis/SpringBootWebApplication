@@ -16,9 +16,12 @@ public class Post {
 	@Id
 	@GeneratedValue
 	private Integer id;
+
 	private String inputMessage;
 
 	private Timestamp timestamp;
+
+	private String locationDetails;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JsonIgnore
@@ -76,9 +79,18 @@ public class Post {
 		this.timestamp = timestamp;
 	}
 
+	public String getLocationDetails() {
+		return locationDetails;
+	}
+
+	public void setLocationDetails(String locationDetails) {
+		this.locationDetails = locationDetails;
+	}
+
 	@Override
 	public String toString() {
-		return "Post [id=" + id + ", inputMessage=" + inputMessage + "]";
+		return "Post [id=" + id + ", inputMessage=" + inputMessage + ", timestamp=" + timestamp + ", locationDetails="
+				+ locationDetails + ", user=" + user + "]";
 	}
 
 }
