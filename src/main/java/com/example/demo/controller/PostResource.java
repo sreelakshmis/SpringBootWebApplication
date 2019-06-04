@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.data.CommentRepository;
 import com.example.demo.data.PostRepository;
 import com.example.demo.data.UserRepository;
+import com.example.demo.exception.MissingRequiredInputException;
 import com.example.demo.model.Comment;
 import com.example.demo.model.Post;
 import com.example.demo.model.User;
@@ -30,17 +31,17 @@ public class PostResource {
 
 	@Autowired
 	PostRepository postRepository;
-	
+
 	@Autowired
 	UserRepository UserRepository;
-	
+
 	@Autowired
 	CommentRepository commentRepository;
-	
+
 	WeatherResource weatherResource = new WeatherResource();
 
 	/**
-	 * This method will return the text passed as path variable
+	 * This method will return the text passed as POST request
 	 * 
 	 * @param message
 	 * @return String
@@ -56,27 +57,30 @@ public class PostResource {
 
 		return post.getInputMessage();
 	}
-  
+
 	/**
 	 * Method that will save the list of post messages for the corresponding user
+	 * 
 	 * @param postWrapper
-	 * @throws IOException 
-	 * @throws JsonMappingException 
-	 * @throws JsonParseException 
+	 * @throws IOException
+	 * @throws JsonMappingException
+	 * @throws JsonParseException
 	 */
 	@PostMapping(path = "/postListMessageForUser")
-	public void createPostListForUser(@RequestBody PostWrapper postWrapper) throws JsonParseException, JsonMappingException, IOException {
+	public void createPostListForUser(@RequestBody PostWrapper postWrapper)
+			throws JsonParseException, JsonMappingException, IOException {
 		if (postWrapper == null)
-			return;
+			throw new MissingRequiredInputException("request body is missing the post details");
 
 		List<String> messsages = postWrapper.getInputMessageList();
 		String firstName = postWrapper.getFirstName();
 		String lastName = postWrapper.getLastName();
 		String cityName = postWrapper.getCityName();
-        
-		if(isEmpty(firstName)||isEmpty(lastName) || isEmpty(cityName) ||CollectionUtils.isEmpty(messsages))
-			return;
-		
+
+		if (isEmpty(firstName) || isEmpty(lastName) || isEmpty(cityName) || CollectionUtils.isEmpty(messsages))
+			throw new MissingRequiredInputException(
+					"missing required input: user name, city or the post message empty");
+
 		// insert User and get the Id back
 		User newUser = UserRepository.save(new User(firstName, lastName));
 
@@ -84,32 +88,43 @@ public class PostResource {
 		Timestamp currentTime = new Timestamp(new Date().getTime());
 		for (String newPostMessage : messsages) {
 			Post newPost = new Post(newPostMessage, currentTime, newUser);
+
+			// make open weather api call for location details
 			newPost.setLocationDetails(weatherResource.makeWeatherAPICall(cityName));
 			postRepository.save(newPost);
 		}
 	}
-	
+
 	/**
-	 * Method will get all the messages added
-	 * @return list of messages 
+	 * Method will get all the messages available in the DB
+	 * 
+	 * @return list of messages
 	 */
 	@GetMapping(path = "/getAllMessages")
-	public List<Post> inputAllMessages() {
-		List<Post> post = postRepository.findAll();
-		return post;
+	public List<Post> getAllMessages() {
+		List<Post> posts = postRepository.findAll();
+		return posts;
 	}
-	
+
 	/**
 	 * Method to comment for a post
+	 * 
 	 * @param comment
 	 * @return the added string
 	 */
 	@PostMapping(path = "/postComment")
 	public String createComment(@RequestBody CommentWrapper comment) {
-		Comment newComment = commentRepository.save(new Comment(comment.getCommentString(), new Post(comment.getPostId())) );
-		return newComment.getCommentString();
+		if(comment == null) return "";
 		
+		Integer postId = comment.getPostId();
+		String commentString = comment.getCommentString();
+		
+		if(postId ==null || isEmpty(commentString))
+			throw new MissingRequiredInputException("required input postId or commentString is missing");
+		
+		commentRepository.save(new Comment(commentString, new Post(postId)));
+		return commentString;
+
 	}
-	
-	
+
 }

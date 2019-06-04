@@ -90,4 +90,8 @@ public class Weather implements Serializable {
 		this.temp = temp;
 	}
 
+	@JsonProperty("main")
+	public void setMain(Map<String, Object> main) {
+		setTemp((double) main.get("temp"));
+	}
 }
