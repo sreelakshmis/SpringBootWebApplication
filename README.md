@@ -7,3 +7,4 @@ The specifications of the application
 5. Interacts with Weather API to fetch the location details and the temperature of user's city
 6. Junit is the unit testing framework 
 7. CI setup with Jenkins 
+8. Service definition using swagger : https://localhost:8081/swagger-ui.html
