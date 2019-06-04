@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.data.CommentRepository;
 import com.example.demo.data.PostRepository;
 import com.example.demo.data.UserRepository;
+import com.example.demo.exception.CityNotFoundException;
 import com.example.demo.exception.MissingRequiredInputException;
 import com.example.demo.model.Comment;
 import com.example.demo.model.Post;
@@ -68,7 +69,7 @@ public class PostResource {
 	 */
 	@PostMapping(path = "/postListMessageForUser")
 	public void createPostListForUser(@RequestBody PostWrapper postWrapper)
-			throws JsonParseException, JsonMappingException, IOException {
+			throws JsonParseException, JsonMappingException, IOException, CityNotFoundException {
 		if (postWrapper == null)
 			throw new MissingRequiredInputException("request body is missing the post details");
 
